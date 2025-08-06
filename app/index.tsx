@@ -1,32 +1,17 @@
-import React from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import CustomBottomSheet from "../components/CustomBottomSheet";
-import NavigationBar from "@/components/NavigationBar";
-import MapDisplay from "@/components/MapDisplay";
+import { NavigationIndependentTree } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import MainScreen from "@/screens/MainScreen";
+import RouteScreen from "@/screens/RouteScreen";
+
+const Stack = createNativeStackNavigator();
 
 export default function Index() {
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <View style={styles.innerContainer}>
-        <NavigationBar />
-        <MapDisplay />
-        <CustomBottomSheet />
-        <StatusBar style="auto" />
-      </View>
-    </GestureHandlerRootView>
-  );
+    <NavigationIndependentTree>
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen name="Main" component={MainScreen}/>
+        <Stack.Screen name="Route" component={RouteScreen}/>
+      </Stack.Navigator>
+    </NavigationIndependentTree>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  innerContainer: {
-    flex: 1,
-    paddingTop: 40,
-    alignItems: 'center',
-  },
-});
-
