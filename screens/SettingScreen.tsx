@@ -1,30 +1,18 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
-import BottomSheet, { BottomSheetView, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import Axios from 'axios';
-import { setStatusBarBackgroundColor } from 'expo-status-bar';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from 'expo-router';
-
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
 
 const apiKey = Constants.expoConfig?.extra?.API_KEY;
 
-const CustomBottomSheet = () => {
-  const navigation = useNavigation();
-  const handleRouteButtonPress = () => {
-    navigation.navigate('Route');
-  };
-
-  const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['30%', '100%'], []);
+const SettingScreen = () => {
   const [vehicles, setVehicles] = useState([]);
   const [route, setRoute] = useState('22');
   const [inputRoute, setInputRoute] = useState('22');
-    
+
   const fetchVehicleData = async (selectedRoute: string) => {
     try {
-        const response = await Axios.get('https://www.ctabustracker.com/bustime/api/v2/getvehicles', {
+        const response = await Axios.get('https://www.ctabustracker.com/bustime/api/v3/getvehicles', {
           params: {
             key: apiKey,
             format: 'json',
@@ -49,19 +37,10 @@ const CustomBottomSheet = () => {
     const handleRouteChange = () => {
         setRoute(inputRoute.trim());
     }
-
+  
   return (
-    <BottomSheet ref={sheetRef} index={0} snapPoints={snapPoints}>
-      <BottomSheetScrollView style={styles.contentContainer}>
         <View style={styles.searchContainer}>
-          {/* <TouchableOpacity style={styles.button} onPress={handleRouteButtonPress}> */}
-          <TouchableOpacity style={styles.button} onPress={handleRouteChange}>
-            <Icon name="search" size={34} color="#000" />
-          </TouchableOpacity>
-          <TextInput style={styles.input} placeholder='Search here...' placeholderTextColor="#888" value={inputRoute} onChangeText={text => setInputRoute(text)}/>
-        </View>
-
-        {vehicles.length > 0 ? (
+          {vehicles.length > 0 ? (
           vehicles.map((vehicle, index) => (
             <View key={index} style={styles.vehicleContainer}>
               <Text style={styles.header}>Bus #{vehicle.vid}</Text>
@@ -73,8 +52,7 @@ const CustomBottomSheet = () => {
         ) : (
           <Text>Loading vehicle data...</Text>
         )}
-      </BottomSheetScrollView>
-    </BottomSheet>
+        </View>
   );
 };
 
@@ -101,13 +79,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    paddingHorizontal: 10,
-    color: '#000',
   }
 });
-
-export default CustomBottomSheet;
+export default SettingScreen;
